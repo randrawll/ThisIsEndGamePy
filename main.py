@@ -1,6 +1,7 @@
 import pygame
 from player import Player
 from level import Level
+from camera import Camera
 from pygame.locals import (K_UP,K_DOWN,K_LEFT,K_RIGHT,K_SPACE,K_ESCAPE,KEYDOWN,KEYUP,QUIT)
 
 
@@ -18,16 +19,18 @@ def main():
     running = True
     x_velo, y_velo = 0, 0
     clock = pygame.time.Clock()
+    cam = Camera(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2)
 
     while running:
         screen.fill((0, 0, 0))
 
         checkKeys(player) 
-        checkBounds(player)
+        #checkBounds(player)
 
         level.draw(screen)
         player.draw(screen)
 
+        cam.update(player, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2)
 
         pygame.display.update()
         pygame.display.flip()
@@ -57,21 +60,6 @@ def checkBounds(thing):
     if thing.y < 0:                         thing.y = 1
 
 main()
-
-
-class Camera:
-    def __init__(self, w, h):
-        self.camera = pygame.Rect(0, 0, w, h)
-        self.width = w
-        self.height = h
-
-    def apply(self, e):
-        return e.rect.move(self.camera.topleft)
-
-    def update(self, target):
-        x = -target.rect.x + int(SCREEN_WIDTH / 2)
-        y = -target.rect.y + int(SCREEN_HEIGHT / 2)
-        self.camera = pygame.Rect(x, y, self.width, self.height)
 
 
 
