@@ -1,7 +1,6 @@
 import pygame
 from spritesheet import Spritesheet
-
-TILESIZE = 32
+from settings import *
 
 class Level(pygame.sprite.Sprite):
     def __init__(self, width, height):
@@ -20,4 +19,10 @@ class Level(pygame.sprite.Sprite):
                     screen.blit(self.tiles[0], (x * TILESIZE, y * TILESIZE))
                 else:
                     screen.blit(self.tiles[1], (x * TILESIZE, y * TILESIZE))  
+
+    def drawgrid(self, screen):
+        for x in range(0, SCREEN_WIDTH, TILESIZE):
+            pygame.draw.line(screen, (200, 0, 0), (x, 0), (x, SCREEN_HEIGHT)) 
+        for y in range(0, SCREEN_WIDTH, TILESIZE):
+            pygame.draw.line(screen, (200, 0, 0), (0, y), (SCREEN_WIDTH, y)) 
         

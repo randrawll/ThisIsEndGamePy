@@ -1,25 +1,34 @@
 import pygame
 from player import Player
 from level import Level
-from camera import Camera
+from settings import *
 from pygame.locals import (K_UP,K_DOWN,K_LEFT,K_RIGHT,K_SPACE,K_ESCAPE,KEYDOWN,KEYUP,QUIT)
 
-
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
-TILESIZE = 32
 moveSpeed = 10
 
+class Camera:
+    def __init__(self, w, h):
+        self.camera = pygame.Rect(0, 0, w, h)
+        self.width = w
+        self.height = h
+
+    def apply(self, e):
+        return e.rect.move(self.camera.topleft)
+
+    def update(self, target, width, height):
+        x = -target.rect.x + int(width / 2)
+        y = -target.rect.y + int(height / 2)
+        self.camera = pygame.Rect(x, y, self.width, self.height)
 
 def main():
     pygame.init()
     screen = pygame.display.set_mode([SCREEN_WIDTH , SCREEN_HEIGHT])
-    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    player = Player(10, 10)
     level = Level(SCREEN_WIDTH, SCREEN_HEIGHT)
     running = True
     x_velo, y_velo = 0, 0
     clock = pygame.time.Clock()
-    cam = Camera(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2)
+    #cam = Camera()
 
     while running:
         screen.fill((0, 0, 0))
@@ -27,10 +36,13 @@ def main():
         checkKeys(player) 
         #checkBounds(player)
 
-        level.draw(screen)
+        #level.draw(screen)
+        level.drawgrid(screen)
+
+
         player.draw(screen)
 
-        cam.update(player, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2)
+        #cam.update(player)
 
         pygame.display.update()
         pygame.display.flip()
