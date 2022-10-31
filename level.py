@@ -26,3 +26,15 @@ class Level(pygame.sprite.Sprite):
         for y in range(0, SCREEN_WIDTH, TILESIZE):
             pygame.draw.line(screen, (200, 0, 0), (0, y), (SCREEN_WIDTH, y)) 
         
+class Wall(pygame.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.gameSprites, game.walls
+        pygame.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = pygame.Surface((TILESIZE, TILESIZE))
+        self.image.fill(GREEN)
+        self.rect = self.image.get_rect()
+        self.x = x 
+        self.y = y
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE

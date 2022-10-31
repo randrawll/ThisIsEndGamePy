@@ -1,10 +1,10 @@
+from tkinter import Y
 import pygame
 from player import Player
-from level import Level
+from level import Level, Wall
 from settings import *
-from pygame.locals import (K_UP,K_DOWN,K_LEFT,K_RIGHT,K_SPACE,K_ESCAPE,KEYDOWN,KEYUP,QUIT)
 
-moveSpeed = 1
+
 
 class Game():
     def __init__(self):  
@@ -14,8 +14,11 @@ class Game():
 
     def initialize(self):
         self.gameSprites = pygame.sprite.Group()
-        self.player = Player(self, 10, 10)
+        self.walls = pygame.sprite.Group()
+        self.player = Player(self, 2, 2)
         self.level = Level(SCREEN_WIDTH, SCREEN_HEIGHT)
+        for x in range(10, 20):
+            Wall(self, 10, 5)
     
     def run(self):
         self.running = True
@@ -28,8 +31,10 @@ class Game():
     def events(self):
         for e in pygame.event.get():
             if e.type == pygame.QUIT: pygame.quit() 
-    
+
     def update(self, dt):
+        if collide(self.player, self.walls):
+            print("COLLIDE!")
         self.player.move(dt)
         self.gameSprites.update()
 
@@ -40,10 +45,15 @@ class Game():
         pygame.display.flip()
 
 
-    
-#player.draw(screen)
-#pygame.display.update()
-    
+def collide(entity, group):
+    for thing in group:
+        if entity.x >= thing.x or entity.x <= thing.x + TILESIZE and entity.y >= thing.y or entity.y <= thing.y + TILESIZE:
+        #if pygame.sprite.spritecollideany(entity, thing):    
+            print(str(thing.x) + " : " + str(thing.y))
+            print(str(entity.x) + " : " + str(entity.y))
+            return True
+    return False
+
 g = Game()
 g.initialize()
 while True:
