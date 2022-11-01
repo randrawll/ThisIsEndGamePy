@@ -11,7 +11,6 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.x = x 
         self.y = y
-        self.name = "TEST"
 
     def update(self):
         self.rect.x = self.x * TILESIZE

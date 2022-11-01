@@ -4,7 +4,8 @@ from player import Player
 from level import Level, Wall
 from settings import *
 
-
+prev_x = 0
+prev_y = 0
 
 class Game():
     def __init__(self):  
@@ -18,7 +19,7 @@ class Game():
         self.player = Player(self, 2, 2)
         self.level = Level(SCREEN_WIDTH, SCREEN_HEIGHT)
         for x in range(10, 20):
-            Wall(self, 10, 5)
+            Wall(self, x, 5)
     
     def run(self):
         self.running = True
@@ -33,9 +34,8 @@ class Game():
             if e.type == pygame.QUIT: pygame.quit() 
 
     def update(self, dt):
-        if collide(self.player, self.walls):
-            print("COLLIDE!")
-        self.player.move(dt)
+        if not collide(self.player, self.walls):
+            self.player.move(dt)
         self.gameSprites.update()
 
     def draw(self):
@@ -44,14 +44,13 @@ class Game():
         self.gameSprites.draw(self.screen)
         pygame.display.flip()
 
-
-def collide(entity, group):
-    for thing in group:
-        if entity.x >= thing.x or entity.x <= thing.x + TILESIZE and entity.y >= thing.y or entity.y <= thing.y + TILESIZE:
-        #if pygame.sprite.spritecollideany(entity, thing):    
-            print(str(thing.x) + " : " + str(thing.y))
-            print(str(entity.x) + " : " + str(entity.y))
-            return True
+def collide(player, group):
+    if pygame.sprite.spritecollideany(player, group): 
+        player.x = prev_x
+        player.y = prev_y
+        return True
+    prev_x = player.x
+    prev_y = player.y
     return False
 
 g = Game()
