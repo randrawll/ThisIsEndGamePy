@@ -9,32 +9,59 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load("duck.png").convert()
         self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect()
-        self.x = x 
-        self.y = y
+        self.vx, self.vy = 0, 0
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
 
     def update(self):
-        self.rect.x = self.x * TILESIZE
-        self.rect.y = self.y * TILESIZE
+        self.move()
+        self.x += self.vx * self.game.dt
+        self.y += self.vy * self.game.dt
+        self.rect.x = self.x 
+        self.collide('x')
+        self.rect.y = self.y 
+        self.collide('y')
 
     def draw(self, screen): 
         screen.blit(self.image, self.rect)
 
-    def move(self, dt):
+    def move(self):
+        self.vx, self.vy = 0, 0
         self.klist = pygame.key.get_pressed()
-        if pygame.key.get_pressed()[K_UP] or pygame.key.get_pressed()[K_w] :
-            self.y += -1 * dt * MOVESPEED
-        if pygame.key.get_pressed()[K_DOWN] or pygame.key.get_pressed()[K_s]:
-            self.y += dt * MOVESPEED
-        if pygame.key.get_pressed()[K_LEFT] or pygame.key.get_pressed()[K_a]:
-            self.x += -1 * dt * MOVESPEED 
-        if pygame.key.get_pressed()[K_RIGHT] or pygame.key.get_pressed()[K_d]:
-            self.x += dt * MOVESPEED
-        #if pygame.key.get_pressed()[K_SPACE]:
+        if self.klist[K_UP] or self.klist[K_w] :
+            self.vy = -MOVESPEED
+        if self.klist[K_DOWN] or self.klist[K_s]:
+            self.vy = MOVESPEED
+        if self.klist[K_LEFT] or self.klist[K_a]:
+            self.vx = -MOVESPEED
+        if self.klist[K_RIGHT] or self.klist[K_d]:
+            self.vx = MOVESPEED
+        #if self.klist[K_SPACE]:
         #    self.attack()
+        if self.vx != 0 and self.vy != 0:
+            self.vx *= 0.7071
+            self.vy *= 0.7071
 
 
-    def checkBounds(thing):
-        if thing.x > SCREEN_WIDTH - TILESIZE:   thing.x = SCREEN_WIDTH - TILESIZE - 1
-        if thing.x < 0:                         thing.x = 1
-        if thing.y > SCREEN_HEIGHT - TILESIZE:  thing.y = SCREEN_HEIGHT - TILESIZE - 1
-        if thing.y < 0:                         thing.y = 1
+    def collide(self, d):
+        if d == "x":
+            xhit = pygame.sprite.spritecollide(self, self.game.walls, False)
+            if xhit:
+                if self.vx > 0:
+                    self.x = xhit[0].rect.left - self.rect.width
+                if self.vx < 0:
+                    self.x = xhit[0].rect.right
+            self.vx = 0
+            self.rect.x = self.x
+        if d == "y":
+            yhit = pygame.sprite.spritecollide(self, self.game.walls, False)
+            if yhit:
+                if self.vy > 0:
+                    self.y = yhit[0].rect.top - self.rect.height
+                if self.vy < 0:
+                    self.y = yhit[0].rect.bottom
+            self.vy = 0
+            self.rect.y = self.y
+
+
+ 
