@@ -8,6 +8,7 @@ MOVESPEED = 300
 
 #colors
 
-BLUE = (0, 0, 200)
+NICEBLUE = (77, 132, 219)
+NICEORANGE = (191, 144, 67)
 GREEN = (166, 255, 107)
 BLACK = (0, 0, 0)
