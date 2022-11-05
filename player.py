@@ -4,21 +4,21 @@ vector = pygame.math.Vector2
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
-        self.groups = game.gameSprites
+        self.groups = game.gameSprites, game.playerSprite
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pygame.image.load("img/duck.png").convert_alpha()
+        self.image = game.playerImage
         self.rect = self.image.get_rect()
         self.vel = vector(0,0)
-        self.pos = vector(x, y) * TILESIZE
+        self.pos = vector(x, y)
 
     def update(self):
         self.move()
         self.pos += self.vel * self.game.dt
         self.rect.x = self.pos.x 
-        self.collide('x')
+        collide_wall(self, self.game.walls, "x")
         self.rect.y = self.pos.y 
-        self.collide('y')
+        collide_wall(self, self.game.walls, "y")
 
     def draw(self, screen): 
         screen.blit(self.image, self.rect)
@@ -40,25 +40,46 @@ class Player(pygame.sprite.Sprite):
             self.vel *= 0.7071
 
 
-    def collide(self, d):
-        if d == "x":
-            xhit = pygame.sprite.spritecollide(self, self.game.walls, False)
-            if xhit:
-                if self.vel.x > 0:
-                    self.pos.x = xhit[0].rect.left - self.rect.width
-                if self.vel.x < 0:
-                    self.pos.x = xhit[0].rect.right
-            self.vel.x = 0
-            self.rect.x = self.pos.x
-        if d == "y":
-            yhit = pygame.sprite.spritecollide(self, self.game.walls, False)
-            if yhit:
-                if self.vel.y > 0:
-                    self.pos.y = yhit[0].rect.top - self.rect.height
-                if self.vel.y < 0:
-                    self.pos.y = yhit[0].rect.bottom
-            self.vel.y = 0
-            self.rect.y = self.pos.y
+def collide_wall(sprite, group, dir):
+    if dir == "x":
+        xhit = pygame.sprite.spritecollide(sprite, group, False)
+        if xhit:
+            if sprite.vel.x > 0:
+                sprite.pos.x = xhit[0].rect.left - sprite.rect.width
+            if sprite.vel.x < 0:
+                sprite.pos.x = xhit[0].rect.right
+        sprite.vel.x = 0
+        sprite.rect.x = sprite.pos.x
+    if dir == "y":
+        yhit = pygame.sprite.spritecollide(sprite, group, False)
+        if yhit:
+            if sprite.vel.y > 0:
+                sprite.pos.y = yhit[0].rect.top - sprite.rect.height
+            if sprite.vel.y < 0:
+                sprite.pos.y = yhit[0].rect.bottom
+        sprite.vel.y = 0
+        sprite.rect.y = sprite.pos.y
+
+def collide_enemy(sprite, group, dir):
+    if dir == "x":
+        xhit = pygame.sprite.spritecollide(sprite, group, False)
+        if xhit:
+            if sprite.vel.x > 0:
+                sprite.pos.x = xhit[0].rect.left - sprite.rect.width
+            if sprite.vel.x < 0:
+                sprite.pos.x = xhit[0].rect.right
+        sprite.vel.x = 0
+        sprite.rect.x = sprite.pos.x
+    if dir == "y":
+        yhit = pygame.sprite.spritecollide(sprite, group, False)
+        if yhit:
+            if sprite.vel.y > 0:
+                sprite.pos.y = yhit[0].rect.top - sprite.rect.height
+            if sprite.vel.y < 0:
+                sprite.pos.y = yhit[0].rect.bottom
+        sprite.vel.y = 0
+        sprite.rect.y = sprite.pos.y
+
 
 
  
