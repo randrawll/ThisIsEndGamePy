@@ -1,7 +1,7 @@
 import pygame
-#from spritesheet import Spritesheet
 from settings import *
 import random
+vector = pygame.math.Vector2
 
 class Things(pygame.sprite.Sprite):
     def __init__(self):
@@ -23,6 +23,26 @@ class Obstacle(pygame.sprite.Sprite):
         self.y = y
         self.rect.x = x 
         self.rect.y = y 
+
+class Weapon(pygame.sprite.Sprite):
+    def __init__(self, game, pos, dir):
+        self.groups = game.gameSprites, game.weapons
+        pygame.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = pygame.Surface((32,16))
+        self.image.fill(RED)
+        self.rect = self.image.get_rect()
+        self.pos = vector(pos)
+        #self.rect.center = pos
+        self.rect.center = vector(game.player.pos.x - 16, game.player.pos.y + 16)
+        self.vel = vector(0,0)
+        #self.spawn_time = pygame.time.get_ticks()
+
+        def update(self):
+            #self.pos += -MOVESPEED * self.game.dt
+            #self.rect.center = self.pos
+            print("WEP")
+
 
 class Spritesheet(object):
     def __init__(self, path):

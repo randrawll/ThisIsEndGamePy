@@ -3,17 +3,6 @@ import random
 from settings import *
 vector = pygame.math.Vector2
 
-# class Obstacle(pygame.sprite.Sprite):
-#     def __init__(self, game, x, y, w, h):
-#         self.groups = game.walls
-#         pygame.sprite.Sprite.__init__(self, self.groups)
-#         self.game = game
-#         self.rect = pygame.Rect(x, y, w, h)
-#         self.x = x 
-#         self.y = y
-#         self.rect.x = x 
-#         self.rect.y = y 
-
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, game, x, y, w, h):
         self.groups = game.gameSprites, game.enemies
@@ -33,9 +22,6 @@ class Enemy(pygame.sprite.Sprite):
         self.pos += self.vel * self.game.dt
         self.rect.x = self.pos.x 
         self.rect.y = self.pos.y 
-
-    def draw(self, screen): 
-        screen.blit(self.image, self.rect)
 
     def move(self):
         self.vel = self.game.player.pos - self.pos

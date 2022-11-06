@@ -34,8 +34,6 @@ class Player(pygame.sprite.Sprite):
             self.vel.x = -MOVESPEED
         if self.klist[K_RIGHT] or self.klist[K_d]:
             self.vel.x = MOVESPEED
-        #if self.klist[K_SPACE]:
-        #    self.attack()
         if self.vel.x != 0 and self.vel.y != 0:
             self.vel *= 0.7071
 

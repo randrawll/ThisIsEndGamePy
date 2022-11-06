@@ -3,7 +3,7 @@ import pygame
 from os import path
 from player import Player
 from enemy import Enemy
-from things import Things, Spritesheet, Obstacle
+from things import Things, Spritesheet, Obstacle, Weapon
 from map import Map, Camera, TiledMap
 from settings import *
 
@@ -28,6 +28,7 @@ class Game():
         self.playerSprite = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
+        self.weapons = pygame.sprite.Group()
         
         for objects in self.map.tmxdata.objects:
             if objects.name == "player":
@@ -52,7 +53,8 @@ class Game():
             if e.type == pygame.QUIT: pygame.quit() 
             if e.type == pygame.KEYDOWN:
                 if e.key == K_SPACE:
-                    self.initialize(2)
+                    #self.initialize(2)
+                    Weapon(self, self.player.pos, "x")
 
     def update(self):
         self.gameSprites.update()
