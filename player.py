@@ -1,5 +1,6 @@
 import pygame
 from settings import *
+from things import Weapon
 vector = pygame.math.Vector2
 
 class Player(pygame.sprite.Sprite):
@@ -14,6 +15,7 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         self.move()
+        #self.weapon()
         self.pos += self.vel * self.game.dt
         self.rect.x = self.pos.x 
         collide_wall(self, self.game.walls, "x")
@@ -22,6 +24,12 @@ class Player(pygame.sprite.Sprite):
 
     def draw(self, screen): 
         screen.blit(self.image, self.rect)
+
+    # def weapon(self):
+    #      for e in pygame.event.get():
+    #          if e.type == pygame.KEYDOWN:
+    #              if e.key == K_SPACE:
+    #                  Weapon(self, self.pos, "x")
 
     def move(self):
         self.vel = vector(0,0)

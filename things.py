@@ -38,10 +38,11 @@ class Weapon(pygame.sprite.Sprite):
         self.vel = vector(0,0)
         #self.spawn_time = pygame.time.get_ticks()
 
-        def update(self):
-            #self.pos += -MOVESPEED * self.game.dt
-            #self.rect.center = self.pos
-            print("WEP")
+    def update(self):
+        #left
+        self.vel.x = -MOVESPEED
+        self.pos += self.vel * self.game.dt
+        self.rect.center = self.pos
 
 
 class Spritesheet(object):

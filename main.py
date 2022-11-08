@@ -7,8 +7,6 @@ from things import Things, Spritesheet, Obstacle, Weapon
 from map import Map, Camera, TiledMap
 from settings import *
 
-
-
 class Game():
     def __init__(self):  
         pygame.init()
