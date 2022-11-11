@@ -27,6 +27,7 @@ class Game():
         self.walls = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
         self.weapons = pygame.sprite.Group()
+        self.obstacles = pygame.sprite.Group()
         
         for objects in self.map.tmxdata.objects:
             if objects.name == "player":
@@ -52,7 +53,11 @@ class Game():
             if e.type == pygame.KEYDOWN:
                 if e.key == K_SPACE:
                     #self.initialize(2)
-                    Weapon(self, self.player.pos, "x")
+                    for k in self.player.direction:
+                        if self.player.direction[k]:
+                            print(k)
+                            Weapon(self, self.player.pos, k)
+                    
 
     def update(self):
         self.gameSprites.update()

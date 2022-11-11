@@ -5,7 +5,7 @@ vector = pygame.math.Vector2
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, game, x, y, w, h):
-        self.groups = game.gameSprites, game.enemies
+        self.groups = game.gameSprites, game.enemies, game.obstacles
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.image = pygame.Surface((16,16))
@@ -15,7 +15,7 @@ class Enemy(pygame.sprite.Sprite):
         self.pos = vector(x, y)
 
     def update(self):
-        self.move()
+        #self.move()
         if pygame.sprite.spritecollideany(self, self.game.playerSprite):
             #self.game.player.kill()
             self.kill()
