@@ -29,33 +29,42 @@ class Weapon(pygame.sprite.Sprite):
         self.groups = game.gameSprites, game.weapons
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pygame.Surface((32,16))
+        self.image = pygame.Surface((32,32))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
         self.pos = vector(pos)
         self.rect.center = vector(game.player.pos.x - 16, game.player.pos.y + 16)
         self.vel = vector(0,0)
         self.dir = d
-        #self.spawn_time = pygame.time.get_ticks()
+        self.spawn_time = pygame.time.get_ticks()
 
     def update(self):
-        #left
         if pygame.sprite.spritecollideany(self, self.game.obstacles):
-            #self.game.player.kill()
+            self.kill()
+            print("HIT!")
+        enemies = []
+        enemy = pygame.sprite.spritecollideany(self, self.game.enemies)
+        if enemy != None:
+            print(enemy.hp)
+            enemy.hp -= 1
+            if enemy.hp < 1:
+                enemy.kill()
+        if pygame.time.get_ticks() - self.spawn_time > 300:
             self.kill()
         if self.dir == "Left":
             self.vel.x = -MOVESPEED
         if self.dir == "Right":
             self.vel.x = MOVESPEED
         if self.dir == "Up":
-            self.image = pygame.Surface((16,32))
+            self.image = pygame.Surface((32,32))
             self.image.fill(RED)
             self.vel.y = -MOVESPEED
         if self.dir == "Down":
-            self.image = pygame.Surface((16,32))
+            self.image = pygame.Surface((32,32))
             self.image.fill(RED)
             self.vel.y = MOVESPEED
         self.pos += self.vel * self.game.dt
+        #self.pos = self.vel * self.game.dt
         self.rect.center = self.pos
 
 

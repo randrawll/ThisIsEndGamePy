@@ -51,12 +51,7 @@ class Game():
         for e in pygame.event.get():
             if e.type == pygame.QUIT: pygame.quit() 
             if e.type == pygame.KEYDOWN:
-                if e.key == K_SPACE:
-                    #self.initialize(2)
-                    for k in self.player.direction:
-                        if self.player.direction[k]:
-                            print(k)
-                            Weapon(self, self.player.pos, k)
+                self.player.weapon(e.key)
                     
 
     def update(self):

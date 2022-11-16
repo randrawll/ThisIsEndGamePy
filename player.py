@@ -16,7 +16,6 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         self.move()
-        #self.weapon()
         self.pos += self.vel * self.game.dt
         self.rect.x = self.pos.x 
         collide_wall(self, self.game.walls, "x")
@@ -29,11 +28,12 @@ class Player(pygame.sprite.Sprite):
     def draw(self, screen): 
         screen.blit(self.image, self.rect)
 
-    # def weapon(self):
-    #      for e in pygame.event.get():
-    #          if e.type == pygame.KEYDOWN:
-    #              if e.key == K_SPACE:
-    #                  Weapon(self, self.pos, "x")
+    def weapon(self, e):
+        if e == K_SPACE:
+             for k in self.direction:
+                if self.direction[k]:
+                    print(k)
+                    Weapon(self.game, self.pos, k)
 
     def move(self):
         self.vel = vector(0,0)
