@@ -21,6 +21,7 @@ class Game():
         self.playerImage = pygame.image.load(path.join(IMG_FOLDER, 'duck.png')).convert_alpha()
 
     def initialize(self, mapNum):
+        self.menu_on = True
         self.thing = Things()
         self.gameSprites = pygame.sprite.Group()
         self.playerSprite = pygame.sprite.Group()
@@ -42,18 +43,28 @@ class Game():
     def run(self):
         self.running = True
         while self.running:
-            self.dt = self.clock.tick(30) / 1000
-            self.events()
-            self.update()
-            self.draw()
+            if self.menu_on:
+                self.events()
+                self.menu()
+            else:
+                self.dt = self.clock.tick(30) / 1000
+                self.events()
+                self.update()
+                self.draw()
 
     def events(self):
         for e in pygame.event.get():
             if e.type == pygame.QUIT: pygame.quit() 
             if e.type == pygame.KEYDOWN:
-                self.player.weapon(e.key)
+                if e.key == K_ESCAPE:
+                    if self.menu_on:
+                        self.initialize(1)
+                        self.menu_on = False
+                    else:
+                        self.menu_on = True
+                else:
+                    self.player.weapon(e.key)
                     
-
     def update(self):
         self.gameSprites.update()
         self.camera.update(self.player)
@@ -64,6 +75,13 @@ class Game():
         self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
         for sprite in self.gameSprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
+        pygame.display.flip()
+
+    def menu(self):
+        self.image = pygame.Surface((SCREEN_WIDTH,SCREEN_HEIGHT))
+        self.image.fill(RED)
+        self.rect = self.image.get_rect()
+        self.screen.blit(self.image, self.rect)
         pygame.display.flip()
 
 g = Game()
