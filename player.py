@@ -8,7 +8,11 @@ class Player(pygame.sprite.Sprite):
         self.groups = game.gameSprites, game.playerSprite
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = game.playerImage
+        self.image = game.playerImageFront
+        self.imageFront = game.playerImageFront
+        self.imageBack = game.playerImageBack
+        self.imageLeft = game.playerImageLeft
+        self.imageRight = game.playerImageRight
         self.rect = self.image.get_rect()
         self.vel = vector(0,0)
         self.pos = vector(x, y)
@@ -40,18 +44,23 @@ class Player(pygame.sprite.Sprite):
         self.klist = pygame.key.get_pressed()
         if self.klist[K_UP] or self.klist[K_w] :
             self.vel.y = -MOVESPEED
+            self.image = self.imageBack
+            self.rect = self.image.get_rect()
             self.direction = {"Up": False, "Down": False, "Left": False, "Right": False}
             self.direction["Up"] = True
         if self.klist[K_DOWN] or self.klist[K_s]:
             self.vel.y = MOVESPEED
+            self.image = self.imageFront
             self.direction = {"Up": False, "Down": False, "Left": False, "Right": False}
             self.direction["Down"] = True
         if self.klist[K_LEFT] or self.klist[K_a]:
             self.vel.x = -MOVESPEED
+            self.image = self.imageLeft
             self.direction = {"Up": False, "Down": False, "Left": False, "Right": False}
             self.direction["Left"] = True
         if self.klist[K_RIGHT] or self.klist[K_d]:
             self.vel.x = MOVESPEED
+            self.image = self.imageRight
             self.direction = {"Up": False, "Down": False, "Left": False, "Right": False}
             self.direction["Right"] = True
         if self.vel.x != 0 and self.vel.y != 0:

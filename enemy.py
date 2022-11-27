@@ -8,8 +8,9 @@ class Enemy(pygame.sprite.Sprite):
         self.groups = game.gameSprites, game.enemies, game.obstacles
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pygame.Surface((16,16))
-        self.image.fill(RED)
+        #self.image = pygame.Surface((16,16))
+        #self.image.fill(RED)
+        self.image = game.flyImage
         self.rect = self.image.get_rect()
         self.vel = vector(0,0)
         self.pos = vector(x, y)

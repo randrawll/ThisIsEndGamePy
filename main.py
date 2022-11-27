@@ -6,6 +6,7 @@ from enemy import Enemy
 from things import Things, Spritesheet, Obstacle, Weapon
 from map import Map, Camera, TiledMap
 from settings import *
+vector = pygame.math.Vector2
 
 class Game():
     def __init__(self):  
@@ -18,7 +19,14 @@ class Game():
         self.map = TiledMap(path.join(MAP_FOLDER, 'tiled1.tmx'))
         self.map_img = self.map.make_map()
         self.map_rect = self.map_img.get_rect()
-        self.playerImage = pygame.image.load(path.join(IMG_FOLDER, 'duck.png')).convert_alpha()
+        self.playerImageFront = pygame.image.load(path.join(IMG_FOLDER, 'duck.png')).convert_alpha()
+        self.playerImageBack = pygame.image.load(path.join(IMG_FOLDER, 'duck_back.png')).convert_alpha()
+        self.playerImageLeft = pygame.image.load(path.join(IMG_FOLDER, 'duck_left.png')).convert_alpha()
+        self.playerImageRight = pygame.image.load(path.join(IMG_FOLDER, 'duck_right.png')).convert_alpha()
+        self.flyImage = pygame.image.load(path.join(IMG_FOLDER, 'fly1.png')).convert_alpha()
+        self.tidemanImage = pygame.image.load(path.join(IMG_FOLDER, 'tideman1.png')).convert_alpha()
+        self.menuimage = pygame.image.load(path.join(IMG_FOLDER, 'menu.png'))
+        self.menurect = self.menuimage.get_rect()
 
     def initialize(self, mapNum):
         self.menu_on = True
@@ -78,10 +86,7 @@ class Game():
         pygame.display.flip()
 
     def menu(self):
-        self.image = pygame.Surface((SCREEN_WIDTH,SCREEN_HEIGHT))
-        self.image.fill(RED)
-        self.rect = self.image.get_rect()
-        self.screen.blit(self.image, self.rect)
+        self.screen.blit(self.menuimage, self.menurect)
         pygame.display.flip()
 
 g = Game()
