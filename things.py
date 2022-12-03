@@ -48,6 +48,8 @@ class Weapon(pygame.sprite.Sprite):
             print(enemy.hp)
             enemy.hp -= 1
             if enemy.hp < 1:
+                self.game.enemycount -= 1
+                print("enemy count: " + str(self.game.enemycount))
                 enemy.kill()
         if pygame.time.get_ticks() - self.spawn_time > 300:
             self.kill()
@@ -64,7 +66,6 @@ class Weapon(pygame.sprite.Sprite):
             self.image.fill(RED)
             self.vel.y = MOVESPEED
         self.pos += self.vel * self.game.dt
-        #self.pos = self.vel * self.game.dt
         self.rect.center = self.pos
 
 

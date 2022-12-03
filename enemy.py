@@ -4,13 +4,17 @@ from settings import *
 vector = pygame.math.Vector2
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, game, x, y, w, h):
+    def __init__(self, game, x, y, w, h, enemytype):
         self.groups = game.gameSprites, game.enemies, game.obstacles
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         #self.image = pygame.Surface((16,16))
         #self.image.fill(RED)
-        self.image = game.tidemanImage
+        self.etype = enemytype
+        if self.etype == "tideman":
+            self.image = game.tidemanImage
+        elif self.etype == "fly":
+            self.image = game.flyImage
         self.rect = self.image.get_rect()
         self.vel = vector(0,0)
         self.pos = vector(x, y)
