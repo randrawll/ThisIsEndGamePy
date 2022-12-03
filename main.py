@@ -23,7 +23,7 @@ class Game():
         self.playerImageBack = pygame.image.load(path.join(IMG_FOLDER, 'duck_back.png')).convert_alpha()
         self.playerImageLeft = pygame.image.load(path.join(IMG_FOLDER, 'duck_left.png')).convert_alpha()
         self.playerImageRight = pygame.image.load(path.join(IMG_FOLDER, 'duck_right.png')).convert_alpha()
-        self.flyImage = pygame.image.load(path.join(IMG_FOLDER, 'fly1.png')).convert_alpha()
+        self.flyImage = pygame.image.load(path.join(IMG_FOLDER, 'fly.png')).convert_alpha()
         self.tidemanImage = pygame.image.load(path.join(IMG_FOLDER, 'tideman1.png')).convert_alpha()
         self.menuimage = pygame.image.load(path.join(IMG_FOLDER, 'menu.png'))
         self.menurect = self.menuimage.get_rect()
