@@ -10,7 +10,7 @@ class Enemy(pygame.sprite.Sprite):
         self.game = game
         #self.image = pygame.Surface((16,16))
         #self.image.fill(RED)
-        self.image = game.flyImage
+        self.image = game.tidemanImage
         self.rect = self.image.get_rect()
         self.vel = vector(0,0)
         self.pos = vector(x, y)

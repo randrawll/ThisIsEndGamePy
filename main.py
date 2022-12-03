@@ -16,19 +16,20 @@ class Game():
         self.load()
 
     def load(self):
-        self.map = TiledMap(path.join(MAP_FOLDER, 'tiled1.tmx'))
-        self.map_img = self.map.make_map()
+        self.map1 = TiledMap(path.join(MAP_FOLDER, 'map1.tmx'))
+        self.map2 = TiledMap(path.join(MAP_FOLDER, 'map2.tmx'))
+        self.map_img = self.map1.make_map()
         self.map_rect = self.map_img.get_rect()
         self.playerImageFront = pygame.image.load(path.join(IMG_FOLDER, 'duck.png')).convert_alpha()
         self.playerImageBack = pygame.image.load(path.join(IMG_FOLDER, 'duck_back.png')).convert_alpha()
         self.playerImageLeft = pygame.image.load(path.join(IMG_FOLDER, 'duck_left.png')).convert_alpha()
         self.playerImageRight = pygame.image.load(path.join(IMG_FOLDER, 'duck_right.png')).convert_alpha()
-        self.flyImage = pygame.image.load(path.join(IMG_FOLDER, 'fly1.png')).convert_alpha()
+        self.flyImage = pygame.image.load(path.join(IMG_FOLDER, 'fly.png')).convert_alpha()
         self.tidemanImage = pygame.image.load(path.join(IMG_FOLDER, 'tideman1.png')).convert_alpha()
         self.menuimage = pygame.image.load(path.join(IMG_FOLDER, 'menu.png'))
         self.menurect = self.menuimage.get_rect()
 
-    def initialize(self, mapNum):
+    def initialize(self, mapname):
         self.menu_on = True
         self.thing = Things()
         self.gameSprites = pygame.sprite.Group()
@@ -38,7 +39,7 @@ class Game():
         self.weapons = pygame.sprite.Group()
         self.obstacles = pygame.sprite.Group()
         
-        for objects in self.map.tmxdata.objects:
+        for objects in self.map1.tmxdata.objects:
             if objects.name == "player":
                 self.player = Player(self, objects.x, objects.y)
             if objects.name == "enemy1":
@@ -46,7 +47,7 @@ class Game():
             if objects.name == "wall":
                 Obstacle(self, objects.x, objects.y, objects.width, objects.height)
 
-        self.camera = Camera(self.map.width, self.map.height)
+        self.camera = Camera(self.map1.width, self.map1.height)
 
     def run(self):
         self.running = True
