@@ -29,9 +29,10 @@ class Weapon(pygame.sprite.Sprite):
         self.groups = game.gameSprites, game.weapons
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pygame.Surface((32,32))
-        self.image.fill(RED)
+
+        self.image = game.sprayImage
         self.rect = self.image.get_rect()
+
         self.pos = vector(pos)
         self.rect.center = vector(game.player.pos.x - 16, game.player.pos.y + 16)
         self.vel = vector(0,0)
@@ -58,12 +59,11 @@ class Weapon(pygame.sprite.Sprite):
         if self.dir == "Right":
             self.vel.x = MOVESPEED
         if self.dir == "Up":
-            self.image = pygame.Surface((32,32))
-            self.image.fill(RED)
             self.vel.y = -MOVESPEED
         if self.dir == "Down":
-            self.image = pygame.Surface((32,32))
-            self.image.fill(RED)
+            #rotate and center
+            #self.image = pygame.Surface((32,32))
+            #self.image.fill(RED)
             self.vel.y = MOVESPEED
         self.pos += self.vel * self.game.dt
         self.rect.center = self.pos

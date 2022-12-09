@@ -8,8 +8,7 @@ class Enemy(pygame.sprite.Sprite):
         self.groups = game.gameSprites, game.enemies, game.obstacles
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        #self.image = pygame.Surface((16,16))
-        #self.image.fill(RED)
+
         self.etype = enemytype
         if self.etype == "tideman":
             self.image = game.tidemanImage
@@ -22,11 +21,11 @@ class Enemy(pygame.sprite.Sprite):
         self.spawn_time = pygame.time.get_ticks()
 
     def update(self):
+        #if pygame.sprite.spritecollideany(self, self.game.playerSprite):
+        #    self.kill()
         if pygame.time.get_ticks() - self.spawn_time > 100:
             self.move()
             self.spawn_time = pygame.time.get_ticks()
-        #if pygame.sprite.spritecollideany(self, self.game.playerSprite):
-        #    self.kill()
             self.pos += self.vel * self.game.dt
         self.rect.x = self.pos.x 
         self.rect.y = self.pos.y 

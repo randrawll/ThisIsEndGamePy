@@ -17,6 +17,10 @@ class Player(pygame.sprite.Sprite):
         self.vel = vector(0,0)
         self.pos = vector(x, y)
         self.direction = {"Up": False, "Down": False, "Left": False, "Right": False}
+        self.health = 5
+        self.spawn_time = pygame.time.get_ticks()
+        self.hittimer = 0
+        self.doHit = False
 
     def update(self):
         self.move()
@@ -25,6 +29,19 @@ class Player(pygame.sprite.Sprite):
         collide_wall(self, self.game.walls, "x")
         self.rect.y = self.pos.y 
         collide_wall(self, self.game.walls, "y")
+
+        if pygame.sprite.spritecollideany(self, self.game.enemies) and pygame.time.get_ticks() - self.hittimer > 1000:
+            self.hittimer = pygame.time.get_ticks()
+            self.health -= 1
+            self.doHit = True
+            self.hitimage = pygame.Surface((32,32))
+            self.hitimage.fill(RED)
+            self.hitrect = self.pos
+            self.image = self.hitimage
+            print(self.health)
+        if self.health < 1:
+            self.kill()
+        self.doHit = False
         # for k in self.direction:
         #     if self.direction[k] == True:
         #         print(k)
@@ -40,31 +57,37 @@ class Player(pygame.sprite.Sprite):
                     Weapon(self.game, self.pos, k)
 
     def move(self):
+        self.pressed = False
         self.vel = vector(0,0)
         self.klist = pygame.key.get_pressed()
-        if self.klist[K_UP] or self.klist[K_w] :
+        if self.klist[K_w] and self.pressed == False:
+            self.pressed = True
             self.vel.y = -MOVESPEED
             self.image = self.imageBack
             self.rect = self.image.get_rect()
             self.direction = {"Up": False, "Down": False, "Left": False, "Right": False}
             self.direction["Up"] = True
-        if self.klist[K_DOWN] or self.klist[K_s]:
+        if self.klist[K_s] and self.pressed == False:
+            self.pressed = True
             self.vel.y = MOVESPEED
             self.image = self.imageFront
             self.direction = {"Up": False, "Down": False, "Left": False, "Right": False}
             self.direction["Down"] = True
-        if self.klist[K_LEFT] or self.klist[K_a]:
+        if self.klist[K_a] and self.pressed == False:
+            self.pressed = True
             self.vel.x = -MOVESPEED
             self.image = self.imageLeft
             self.direction = {"Up": False, "Down": False, "Left": False, "Right": False}
             self.direction["Left"] = True
-        if self.klist[K_RIGHT] or self.klist[K_d]:
+        if self.klist[K_d] and self.pressed == False:
+            self.pressed = True
             self.vel.x = MOVESPEED
             self.image = self.imageRight
             self.direction = {"Up": False, "Down": False, "Left": False, "Right": False}
             self.direction["Right"] = True
-        if self.vel.x != 0 and self.vel.y != 0:
-            self.vel *= 0.7071
+        #if self.vel.x != 0 and self.vel.y != 0:
+        #    self.vel *= 0.7071
+
 
 
 def collide_wall(sprite, group, direction):

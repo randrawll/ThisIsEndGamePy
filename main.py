@@ -13,15 +13,16 @@ class Game():
         pygame.init()
         self.screen = pygame.display.set_mode([SCREEN_WIDTH , SCREEN_HEIGHT])
         self.clock = pygame.time.Clock()
-        self.load(1)
+        self.levelCounter = 1
+        self.load(self.levelCounter)
 
     def load(self, mapnum):
         if mapnum == 1:
-            self.map = TiledMap(path.join(MAP_FOLDER, 'map1.tmx'))
-            self.enemycount = 5
+            self.map = TiledMap(path.join(MAP_FOLDER, 'endgame_map1.tmx'))
+            self.enemycount = 8
         elif mapnum == 2:
-            self.map = TiledMap(path.join(MAP_FOLDER, 'map2.tmx'))
-            self.enemycount = 2
+            self.map = TiledMap(path.join(MAP_FOLDER, 'endgame_map2.tmx'))
+            self.enemycount = 5
         self.map_img = self.map.make_map()
         self.map_rect = self.map_img.get_rect()
 
@@ -29,11 +30,9 @@ class Game():
         self.playerImageBack = pygame.image.load(path.join(IMG_FOLDER, 'duck_back.png')).convert_alpha()
         self.playerImageLeft = pygame.image.load(path.join(IMG_FOLDER, 'duck_left.png')).convert_alpha()
         self.playerImageRight = pygame.image.load(path.join(IMG_FOLDER, 'duck_right.png')).convert_alpha()
+        self.sprayImage = pygame.image.load(path.join(IMG_FOLDER, 'spray.png')).convert_alpha()
         self.flyImage = pygame.image.load(path.join(IMG_FOLDER, 'fly.png')).convert_alpha()
         self.tidemanImage = pygame.image.load(path.join(IMG_FOLDER, 'tideman1.png')).convert_alpha()
-
-        self.menuimage = pygame.image.load(path.join(IMG_FOLDER, 'menu.png'))
-        self.menurect = self.menuimage.get_rect()
 
     def initialize(self, menubool):
         self.menu_on = menubool
@@ -46,14 +45,15 @@ class Game():
         self.obstacles = pygame.sprite.Group()
         
         for objects in self.map.tmxdata.objects:
+            if objects.name == "wall":
+                Obstacle(self, objects.x, objects.y, objects.width, objects.height)
             if objects.name == "player":
                 self.player = Player(self, objects.x, objects.y)
             if objects.name == "enemy1":
                 Enemy(self, objects.x, objects.y, objects.width, objects.height, "fly")
             if objects.name == "enemy2":
                 Enemy(self, objects.x, objects.y, objects.width, objects.height, "tideman")
-            if objects.name == "wall":
-                Obstacle(self, objects.x, objects.y, objects.width, objects.height)
+
 
         self.camera = Camera(self.map.width, self.map.height)
 
@@ -75,12 +75,10 @@ class Game():
             if e.type == pygame.KEYDOWN:
                 if e.key == K_ESCAPE:
                     if self.menu_on:
-                        self.load(2)
-                        self.initialize(True)
                         self.menu_on = False
                     else:
                         self.menu_on = True
-                else:
+                elif e.key == K_SPACE:
                     self.player.weapon(e.key)
                     
     def update(self):
@@ -88,8 +86,9 @@ class Game():
         self.camera.update(self.player)
 
         if self.enemycount == 0:
-                self.load(1)
-                self.initialize(False)
+            self.levelCounter += 1
+            self.load(self.levelCounter)
+            self.initialize(False)
 
     def draw(self):
         pygame.display.set_caption("{:.2f}".format(self.clock.get_fps()))
@@ -100,7 +99,11 @@ class Game():
         pygame.display.flip()
 
     def menu(self):
+        self.menuimage = pygame.image.load(path.join(IMG_FOLDER, 'menu.png')).convert_alpha()
+        self.menuimage = pygame.transform.scale(self.menuimage, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.menurect = self.menuimage.get_rect()
         self.screen.blit(self.menuimage, self.menurect)
+
         pygame.display.flip()
 
 g = Game()
