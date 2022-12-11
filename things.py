@@ -24,6 +24,55 @@ class Obstacle(pygame.sprite.Sprite):
         self.rect.x = x 
         self.rect.y = y 
 
+
+class HealthBar(pygame.sprite.Sprite):
+    def __init__(self, game):
+        self.groups = game.gameSprites, game.health
+        pygame.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+
+        self.image = pygame.Surface((100,15))
+        self.image.fill(RED)
+        self.rect = self.image.get_rect()
+        self.pos = vector(100,100)
+
+    def update(self):
+        self.image = pygame.Surface((self.game.player.health * 20,15))
+        self.image.fill(RED)
+        self.rect.x = self.game.player.pos.x - 480
+        self.rect.y = self.game.player.pos.y - 380
+
+
+
+
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self, game, pos):
+        self.groups = game.gameSprites, game.bullets
+        pygame.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+
+        self.image = pygame.Surface((10,10))
+        self.image.fill(RED)
+        self.rect = self.image.get_rect()
+
+        self.pos = vector(pos)
+        self.rect.center = vector(pos)
+        self.vel = vector(0,0)
+        self.spawn_time = pygame.time.get_ticks()
+        self.hittimer = 0
+
+    def update(self):
+        self.vel = self.game.player.pos - self.pos
+        self.vel = E_MOVESPEED * self.vel.normalize()
+        self.pos += self.vel * self.game.dt
+        self.rect.center = self.pos
+
+        if pygame.sprite.spritecollideany(self, self.game.playerSprite):
+            if pygame.time.get_ticks() - self.hittimer > 1000:
+                self.hittimer = pygame.time.get_ticks()
+                self.game.player.hit()
+            self.kill()
+
 class Weapon(pygame.sprite.Sprite):
     def __init__(self, game, pos, d):
         self.groups = game.gameSprites, game.weapons

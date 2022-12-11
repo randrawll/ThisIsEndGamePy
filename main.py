@@ -3,7 +3,7 @@ import pygame
 from os import path
 from player import Player
 from enemy import Enemy
-from things import Things, Spritesheet, Obstacle, Weapon
+from things import Things, Spritesheet, Obstacle, Weapon, HealthBar
 from map import Map, Camera, TiledMap
 from settings import *
 vector = pygame.math.Vector2
@@ -19,7 +19,7 @@ class Game():
     def load(self, mapnum):
         if mapnum == 1:
             self.map = TiledMap(path.join(MAP_FOLDER, 'endgame_map1.tmx'))
-            self.enemycount = 8
+            self.enemycount = 7
         elif mapnum == 2:
             self.map = TiledMap(path.join(MAP_FOLDER, 'endgame_map2.tmx'))
             self.enemycount = 5
@@ -34,15 +34,18 @@ class Game():
         self.flyImage = pygame.image.load(path.join(IMG_FOLDER, 'fly.png')).convert_alpha()
         self.tidemanImage = pygame.image.load(path.join(IMG_FOLDER, 'tideman1.png')).convert_alpha()
 
-    def initialize(self, menubool):
-        self.menu_on = menubool
+    def initialize(self, pausedstate):
+        self.paused = pausedstate
         self.thing = Things()
         self.gameSprites = pygame.sprite.Group()
         self.playerSprite = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
         self.weapons = pygame.sprite.Group()
+        self.bullets = pygame.sprite.Group()
         self.obstacles = pygame.sprite.Group()
+        self.health = pygame.sprite.Group()
+        HealthBar(self)
         
         for objects in self.map.tmxdata.objects:
             if objects.name == "wall":
@@ -60,9 +63,10 @@ class Game():
     def run(self):
         self.running = True
         while self.running:
-            if self.menu_on:
+            if self.paused:
                 self.events()
-                self.menu()
+                #self.menu()
+                self.draw()
             else:
                 self.dt = self.clock.tick(30) / 1000
                 self.events()
@@ -74,10 +78,10 @@ class Game():
             if e.type == pygame.QUIT: pygame.quit() 
             if e.type == pygame.KEYDOWN:
                 if e.key == K_ESCAPE:
-                    if self.menu_on:
-                        self.menu_on = False
+                    if self.paused:
+                        self.paused = False
                     else:
-                        self.menu_on = True
+                        self.paused = True
                 elif e.key == K_SPACE:
                     self.player.weapon(e.key)
                     
@@ -96,6 +100,9 @@ class Game():
         self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
         for sprite in self.gameSprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
+
+
+
         pygame.display.flip()
 
     def menu(self):
@@ -103,7 +110,6 @@ class Game():
         self.menuimage = pygame.transform.scale(self.menuimage, (SCREEN_WIDTH, SCREEN_HEIGHT))
         self.menurect = self.menuimage.get_rect()
         self.screen.blit(self.menuimage, self.menurect)
-
         pygame.display.flip()
 
 g = Game()

@@ -31,20 +31,23 @@ class Player(pygame.sprite.Sprite):
         collide_wall(self, self.game.walls, "y")
 
         if pygame.sprite.spritecollideany(self, self.game.enemies) and pygame.time.get_ticks() - self.hittimer > 1000:
-            self.hittimer = pygame.time.get_ticks()
-            self.health -= 1
-            self.doHit = True
-            self.hitimage = pygame.Surface((32,32))
-            self.hitimage.fill(RED)
-            self.hitrect = self.pos
-            self.image = self.hitimage
-            print(self.health)
+            self.hit()
         if self.health < 1:
             self.kill()
         self.doHit = False
         # for k in self.direction:
         #     if self.direction[k] == True:
         #         print(k)
+
+    def hit(self):
+        self.hittimer = pygame.time.get_ticks()
+        self.health -= 1
+        self.doHit = True
+        self.hitimage = pygame.Surface((32,32))
+        self.hitimage.fill(RED)
+        self.hitrect = self.pos
+        self.image = self.hitimage
+        print(self.health)
 
     def draw(self, screen): 
         screen.blit(self.image, self.rect)

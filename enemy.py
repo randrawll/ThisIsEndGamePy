@@ -1,6 +1,7 @@
 import pygame
 import random
 from settings import *
+from things import Bullet
 vector = pygame.math.Vector2
 
 class Enemy(pygame.sprite.Sprite):
@@ -30,11 +31,15 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x = self.pos.x 
         self.rect.y = self.pos.y 
 
+    def weapon(self):
+        Bullet(self.game, self.pos)
+
     def move(self):
         self.vel = self.game.player.pos - self.pos
         num = random.randrange(1,10)
         if num % 2 == 0:
             self.vel = E_MOVESPEED * self.vel.normalize()
+            self.weapon()
         else:
             self.vel.y = E_MOVESPEED * random.randrange(-5,5)
             self.vel.x = E_MOVESPEED * random.randrange(-5,5)
