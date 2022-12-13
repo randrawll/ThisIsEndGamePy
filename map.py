@@ -47,7 +47,6 @@ class Camera:
     def apply_rect(self, rect):
         return rect.move(self.camera.topleft)
 
-
     def update(self, target):
         x = -target.rect.x + int(SCREEN_WIDTH / 2)
         y = -target.rect.y + int(SCREEN_HEIGHT / 2)

@@ -25,52 +25,75 @@ class Obstacle(pygame.sprite.Sprite):
         self.rect.y = y 
 
 
+# class HealthBar(pygame.sprite.Sprite):
+#     def __init__(self, game):
+#         self.groups = game.gameSprites, game.health
+#         pygame.sprite.Sprite.__init__(self, self.groups)
+#         self.game = game
+#         self.image = pygame.Surface((100,15))
+#         self.image.fill(RED)
+#         self.rect = self.image.get_rect()
+
+#     def update(self):
+#         self.image = pygame.Surface((self.game.player.health * 20,15))
+#         self.image.fill(RED)
+#         self.rect.x = self.game.player.pos.x - 480
+#         self.rect.y = self.game.player.pos.y - 380
+    
+#     def draw(self):
+#         self.game.screen.blit(self.image, self.camera.apply(self))
+
 class HealthBar(pygame.sprite.Sprite):
     def __init__(self, game):
         self.groups = game.gameSprites, game.health
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-
-        self.image = pygame.Surface((100,15))
+        self.image = pygame.Surface((100,5))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
-        self.pos = vector(100,100)
 
     def update(self):
-        self.image = pygame.Surface((self.game.player.health * 20,15))
+        self.image = pygame.Surface((self.game.player.health * 10,3))
         self.image.fill(RED)
-        self.rect.x = self.game.player.pos.x - 480
-        self.rect.y = self.game.player.pos.y - 380
+        self.rect.x = self.game.player.pos.x - 30
+        self.rect.y = self.game.player.pos.y + 40
 
-
+    
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, game, pos):
+    def __init__(self, game, pos, bullettype):
         self.groups = game.gameSprites, game.bullets
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-
+        self.bullettype = bullettype
         self.image = pygame.Surface((10,10))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
-
         self.pos = vector(pos)
         self.rect.center = vector(pos)
-        self.vel = vector(0,0)
         self.spawn_time = pygame.time.get_ticks()
         self.hittimer = 0
-
-    def update(self):
         self.vel = self.game.player.pos - self.pos
         self.vel = E_MOVESPEED * self.vel.normalize()
-        self.pos += self.vel * self.game.dt
-        self.rect.center = self.pos
+
+    def update(self):
+        #follow player
+        if self.bullettype == "follow":
+            self.vel = self.game.player.pos - self.pos
+            self.vel = BULLET_SPEED * self.vel.normalize()
+            self.pos += self.vel * self.game.dt
+            self.rect.center = self.pos
+        if self.bullettype == "direction":
+            self.pos += self.vel * self.game.dt
+            self.rect.center = self.pos
 
         if pygame.sprite.spritecollideany(self, self.game.playerSprite):
             if pygame.time.get_ticks() - self.hittimer > 1000:
                 self.hittimer = pygame.time.get_ticks()
                 self.game.player.hit()
+            self.kill()
+        if pygame.sprite.spritecollideany(self, self.game.walls):
             self.kill()
 
 class Weapon(pygame.sprite.Sprite):
@@ -91,17 +114,17 @@ class Weapon(pygame.sprite.Sprite):
     def update(self):
         if pygame.sprite.spritecollideany(self, self.game.obstacles):
             self.kill()
-            print("HIT!")
+            #print("HIT!")
         enemies = []
         enemy = pygame.sprite.spritecollideany(self, self.game.enemies)
         if enemy != None:
-            print(enemy.hp)
+            #print(enemy.hp)
             enemy.hp -= 1
             if enemy.hp < 1:
                 self.game.enemycount -= 1
-                print("enemy count: " + str(self.game.enemycount))
+                #print("enemy count: " + str(self.game.enemycount))
                 enemy.kill()
-        if pygame.time.get_ticks() - self.spawn_time > 300:
+        if pygame.time.get_ticks() - self.spawn_time > 1000:
             self.kill()
         if self.dir == "Left":
             self.vel.x = -MOVESPEED
@@ -110,9 +133,6 @@ class Weapon(pygame.sprite.Sprite):
         if self.dir == "Up":
             self.vel.y = -MOVESPEED
         if self.dir == "Down":
-            #rotate and center
-            #self.image = pygame.Surface((32,32))
-            #self.image.fill(RED)
             self.vel.y = MOVESPEED
         self.pos += self.vel * self.game.dt
         self.rect.center = self.pos

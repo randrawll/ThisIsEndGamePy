@@ -17,7 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.vel = vector(0,0)
         self.pos = vector(x, y)
         self.direction = {"Up": False, "Down": False, "Left": False, "Right": False}
-        self.health = 5
+        self.health = 10
         self.spawn_time = pygame.time.get_ticks()
         self.hittimer = 0
         self.doHit = False
@@ -35,9 +35,6 @@ class Player(pygame.sprite.Sprite):
         if self.health < 1:
             self.kill()
         self.doHit = False
-        # for k in self.direction:
-        #     if self.direction[k] == True:
-        #         print(k)
 
     def hit(self):
         self.hittimer = pygame.time.get_ticks()
@@ -88,10 +85,8 @@ class Player(pygame.sprite.Sprite):
             self.image = self.imageRight
             self.direction = {"Up": False, "Down": False, "Left": False, "Right": False}
             self.direction["Right"] = True
-        #if self.vel.x != 0 and self.vel.y != 0:
-        #    self.vel *= 0.7071
-
-
+        if self.vel.x != 0 and self.vel.y != 0:
+            self.vel *= 0.7071
 
 def collide_wall(sprite, group, direction):
     if direction == "x":
