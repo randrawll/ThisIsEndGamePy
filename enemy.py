@@ -40,10 +40,23 @@ class Enemy(pygame.sprite.Sprite):
     def weapon(self):
         if self.etype == "tideman":
             Bullet(self.game, self.pos, "follow")
+            self.pos.x = self.pos.x + 50
+            Bullet(self.game, self.pos, "follow")
+            self.pos.x = self.pos.x - 100
+            Bullet(self.game, self.pos, "follow")
         if self.etype == "fly":
             Bullet(self.game, self.pos, "direction")
 
     def move(self):
+        if self.pos.x < 0:
+            self.pos.x = 10
+        if self.pos.x > 1600:
+            self.pos.x = 1580
+        if self.pos.y < 0:
+            self.pos.x = 10
+        if self.pos.y > 1600:
+            self.pos.x = 1580
+
         if self.etype == "tick":
             self.vel = self.game.player.pos - self.pos
             self.vel = BULLET_SPEED * self.vel.normalize()
@@ -51,7 +64,12 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.center = self.pos
             self.vel.y = BULLET_SPEED * random.randrange(-5,5)
             self.vel.x = BULLET_SPEED * random.randrange(-5,5)
-        else:
+        if self.etype == "tideman":
+            self.vel = self.game.player.pos - self.pos
+            self.vel = BULLET_SPEED * self.vel.normalize()
+            self.pos += self.vel * self.game.dt
+            self.rect.center = self.pos
+        if self.etype == "fly":
             self.vel = self.game.player.pos - self.pos
             num = random.randrange(1,10)
             if num % 2 == 0:
@@ -60,16 +78,7 @@ class Enemy(pygame.sprite.Sprite):
                 self.vel.y = E_MOVESPEED * random.randrange(-5,5)
                 self.vel.x = E_MOVESPEED * random.randrange(-5,5)
 
-        #fun one
-        # if pygame.time.get_ticks() - self.spawn_time > 1000:
-        #     self.vel = self.game.player.pos - self.pos
-        #     num = random.randrange(1,10)
-        #     if num % 2 == 0:
-        #         self.vel = E_MOVESPEED * self.vel.normalize()
-        #     else:
-        #         self.vel.y = E_MOVESPEED * random.randrange(-5,5)
-        #         self.vel.x = E_MOVESPEED * random.randrange(-5,5)
-        #     self.spawn_time = pygame.time.get_ticks()
+
 
 
 def collide_wall(sprite, group, direction):

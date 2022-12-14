@@ -16,15 +16,16 @@ class Game():
         self.finalLevel = 3
         self.levelCounter = 1
         self.startgame = True
+        self.firstpause = True
         self.load(self.levelCounter)
 
     def load(self, mapnum):
         if mapnum == 1:
             self.map = TiledMap(path.join(MAP_FOLDER, 'endgame_map1.tmx'))
-            self.enemycount = 1
+            self.enemycount = 9
         elif mapnum == 2:
             self.map = TiledMap(path.join(MAP_FOLDER, 'endgame_map2.tmx'))
-            self.enemycount = 1
+            self.enemycount = 5
         elif mapnum == 3:
             self.map = TiledMap(path.join(MAP_FOLDER, 'endgame_map3.tmx'))
             self.enemycount = 1
@@ -72,11 +73,18 @@ class Game():
         self.startgame = True
         while self.running:
             self.dt = self.clock.tick(30) / 1000
-            if self.paused or self.levelCounter == self.finalLevel + 1:
+            # if self.paused or self.levelCounter == self.finalLevel + 1:
+            if self.paused and self.startgame:
                 self.events()
-                #self.draw()
-                self.menu()
-            else:
+                self.menu('menu.png')
+            #menu2.png
+            elif self.paused and self.levelCounter < self.finalLevel + 1:
+                self.events()
+                self.menu('menupaused.png')
+            elif self.levelCounter == self.finalLevel + 1:
+                self.events()
+                self.menu('menuend.png')
+            elif self.paused == False:
                 self.events()
                 self.update()
                 self.draw()
@@ -87,6 +95,7 @@ class Game():
             if e.type == pygame.KEYDOWN:
                 if e.key == K_ESCAPE:
                     if self.paused:
+                        self.startgame = False  
                         self.paused = False
                     else:
                         self.paused = True
@@ -98,21 +107,25 @@ class Game():
         self.camera.update(self.player)
 
         if self.enemycount == 0:
+            self.paused = True
             self.levelCounter += 1
             self.load(self.levelCounter)
             self.initialize(False)
 
+
     def draw(self):
         pygame.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-        #self.thing.drawgrid(self.screen)
         self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
         for sprite in self.gameSprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
-        #self.screen.blit(self.healthbar.image, self.camera.apply(self.healthbar))
         pygame.display.flip()
 
-    def menu(self):
-        self.menuimage = pygame.image.load(path.join(IMG_FOLDER, 'menu.png')).convert_alpha()
+    def menu(self, menuname):
+        # if self.startgame:
+        #     self.menuimage = pygame.image.load(path.join(IMG_FOLDER, 'menu.png')).convert_alpha()
+        # else:
+        #     self.menuimage = pygame.image.load(path.join(IMG_FOLDER, 'menupaused.png')).convert_alpha()
+        self.menuimage = pygame.image.load(path.join(IMG_FOLDER, menuname)).convert_alpha()
         self.menuimage = pygame.transform.scale(self.menuimage, (SCREEN_WIDTH, SCREEN_HEIGHT))
         self.menurect = self.menuimage.get_rect()
         self.screen.blit(self.menuimage, self.menurect)
