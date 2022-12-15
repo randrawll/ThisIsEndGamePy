@@ -34,6 +34,7 @@ class Player(pygame.sprite.Sprite):
             self.hit()
         if self.health < 1:
             self.kill()
+            self.game.paused = True
         self.doHit = False
 
     def hit(self):
@@ -44,7 +45,6 @@ class Player(pygame.sprite.Sprite):
         self.hitimage.fill(RED)
         self.hitrect = self.pos
         self.image = self.hitimage
-        print(self.health)
 
     def draw(self, screen): 
         screen.blit(self.image, self.rect)
@@ -53,7 +53,6 @@ class Player(pygame.sprite.Sprite):
         if e == K_SPACE:
              for k in self.direction:
                 if self.direction[k]:
-                    print(k)
                     Weapon(self.game, self.pos, k)
 
     def move(self):
@@ -108,25 +107,25 @@ def collide_wall(sprite, group, direction):
         sprite.vel.y = 0
         sprite.rect.y = sprite.pos.y
 
-def collide_enemy(sprite, group, direction):
-    if direction == "x":
-        xhit = pygame.sprite.spritecollide(sprite, group, False)
-        if xhit:
-            if sprite.vel.x > 0:
-                sprite.pos.x = xhit[0].rect.left - sprite.rect.width
-            if sprite.vel.x < 0:
-                sprite.pos.x = xhit[0].rect.right
-        sprite.vel.x = 0
-        sprite.rect.x = sprite.pos.x
-    if direction == "y":
-        yhit = pygame.sprite.spritecollide(sprite, group, False)
-        if yhit:
-            if sprite.vel.y > 0:
-                sprite.pos.y = yhit[0].rect.top - sprite.rect.height
-            if sprite.vel.y < 0:
-                sprite.pos.y = yhit[0].rect.bottom
-        sprite.vel.y = 0
-        sprite.rect.y = sprite.pos.y
+# def collide_enemy(sprite, group, direction):
+#     if direction == "x":
+#         xhit = pygame.sprite.spritecollide(sprite, group, False)
+#         if xhit:
+#             if sprite.vel.x > 0:
+#                 sprite.pos.x = xhit[0].rect.left - sprite.rect.width
+#             if sprite.vel.x < 0:
+#                 sprite.pos.x = xhit[0].rect.right
+#         sprite.vel.x = 0
+#         sprite.rect.x = sprite.pos.x
+#     if direction == "y":
+#         yhit = pygame.sprite.spritecollide(sprite, group, False)
+#         if yhit:
+#             if sprite.vel.y > 0:
+#                 sprite.pos.y = yhit[0].rect.top - sprite.rect.height
+#             if sprite.vel.y < 0:
+#                 sprite.pos.y = yhit[0].rect.bottom
+#         sprite.vel.y = 0
+#         sprite.rect.y = sprite.pos.y
 
 
 

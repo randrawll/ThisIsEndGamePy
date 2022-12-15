@@ -15,8 +15,7 @@ class Game():
         self.clock = pygame.time.Clock()
         self.finalLevel = 3
         self.levelCounter = 1
-        self.startgame = True
-        self.firstpause = True
+        self.startgame = 0
         self.load(self.levelCounter)
 
     def load(self, mapnum):
@@ -70,18 +69,19 @@ class Game():
 
     def run(self):
         self.running = True
-        self.startgame = True
         while self.running:
             self.dt = self.clock.tick(30) / 1000
-            # if self.paused or self.levelCounter == self.finalLevel + 1:
-            if self.paused and self.startgame:
+            if self.paused:
                 self.events()
-                self.menu('menu.png')
-            #menu2.png
-            elif self.paused and self.levelCounter < self.finalLevel + 1:
-                self.events()
-                self.menu('menupaused.png')
-            elif self.levelCounter == self.finalLevel + 1:
+                if self.player.health < 1:
+                    self.menu('died.png')
+                elif self.startgame == 0:
+                    self.menu('menu.png')
+                elif self.startgame == 1:
+                    self.menu('menu2.png')
+                elif self.levelCounter < self.finalLevel + 1 and self.startgame > 1:
+                    self.menu('menupaused.png')
+            elif self.levelCounter == self.finalLevel + 1 and self.startgame > 1:
                 self.events()
                 self.menu('menuend.png')
             elif self.paused == False:
@@ -95,8 +95,16 @@ class Game():
             if e.type == pygame.KEYDOWN:
                 if e.key == K_ESCAPE:
                     if self.paused:
-                        self.startgame = False  
-                        self.paused = False
+                        if self.player.health < 1:
+                            self.levelCounter = 1
+                            self.startgame = 0
+                            self.load(self.levelCounter)
+                            g.initialize(True)
+                            self.paused = False
+                        else:
+                            self.startgame += 1
+                            if self.startgame > 1:  
+                                self.paused = False              
                     else:
                         self.paused = True
                 elif e.key == K_SPACE:
@@ -121,10 +129,6 @@ class Game():
         pygame.display.flip()
 
     def menu(self, menuname):
-        # if self.startgame:
-        #     self.menuimage = pygame.image.load(path.join(IMG_FOLDER, 'menu.png')).convert_alpha()
-        # else:
-        #     self.menuimage = pygame.image.load(path.join(IMG_FOLDER, 'menupaused.png')).convert_alpha()
         self.menuimage = pygame.image.load(path.join(IMG_FOLDER, menuname)).convert_alpha()
         self.menuimage = pygame.transform.scale(self.menuimage, (SCREEN_WIDTH, SCREEN_HEIGHT))
         self.menurect = self.menuimage.get_rect()
