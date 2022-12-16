@@ -16,6 +16,14 @@ class Game():
         self.finalLevel = 3
         self.levelCounter = 1
         self.startgame = 0
+        pygame.mixer.music.load('sound.mp3')
+        pygame.mixer.music.set_volume(0.3)
+        self.spray_sound = pygame.mixer.Sound("spray.mp3")
+        self.spray_sound.set_volume(0.1)
+        self.duck_sound = pygame.mixer.Sound("duck.mp3")
+        self.duck_sound.set_volume(0.3)
+        self.splat_sound = pygame.mixer.Sound("splat.mp3")
+        self.splat_sound.set_volume(0.1)
         self.load(self.levelCounter)
 
     def load(self, mapnum):
@@ -25,9 +33,15 @@ class Game():
         elif mapnum == 2:
             self.map = TiledMap(path.join(MAP_FOLDER, 'endgame_map2.tmx'))
             self.enemycount = 5
+            pygame.mixer.music.load('sound2.mp3')
+            pygame.mixer.music.set_volume(0.3)
+            pygame.mixer.music.play(-1)
         elif mapnum == 3:
             self.map = TiledMap(path.join(MAP_FOLDER, 'endgame_map3.tmx'))
             self.enemycount = 1
+            pygame.mixer.music.load('sound3.mp3')
+            pygame.mixer.music.set_volume(0.3)
+            pygame.mixer.music.play(-1)
         self.map_img = self.map.make_map()
         self.map_rect = self.map_img.get_rect()
 
@@ -69,6 +83,7 @@ class Game():
 
     def run(self):
         self.running = True
+        pygame.mixer.music.play(-1)
         while self.running:
             self.dt = self.clock.tick(30) / 1000
             if self.paused:
@@ -108,6 +123,7 @@ class Game():
                     else:
                         self.paused = True
                 elif e.key == K_SPACE:
+                    pygame.mixer.Sound.play(self.spray_sound)
                     self.player.weapon(e.key)
                     
     def update(self):

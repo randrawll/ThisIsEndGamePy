@@ -39,6 +39,7 @@ class Player(pygame.sprite.Sprite):
 
     def hit(self):
         self.hittimer = pygame.time.get_ticks()
+        pygame.mixer.Sound.play(self.game.duck_sound)
         self.health -= 1
         self.doHit = True
         self.hitimage = pygame.Surface((32,32))

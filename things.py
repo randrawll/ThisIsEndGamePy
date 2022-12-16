@@ -120,6 +120,7 @@ class Weapon(pygame.sprite.Sprite):
         if enemy != None:
             #print(enemy.hp)
             enemy.hp -= 1
+            pygame.mixer.Sound.play(self.game.splat_sound)
             if enemy.hp < 1:
                 self.game.enemycount -= 1
                 #print("enemy count: " + str(self.game.enemycount))
